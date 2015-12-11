@@ -1,0 +1,1 @@
+from AA_string.StringCompare import StringCompare as scclass CompareFacade:    """A Compare Facade Class """    @staticmethod    def string_distance(source, target):        return sc.string_distance(source, target)    @staticmethod    def string_different(source, target):        return sc.string_different(source, target)

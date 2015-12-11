@@ -1,0 +1,1 @@
+DELETE = -1INSERT = 1EQUAL = 0

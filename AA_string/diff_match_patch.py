@@ -161,38 +161,21 @@ class diff_match_patch:
       # Just delete some text (speedup).
       return [(self.DIFF_DELETE, text1)]
 
-    if text1 == text2:
-      # When text1 equal to text2
-      return [(self.DIFF_EQUAL, text1)]
-
     if len(text1) > len(text2):
       (longtext, shorttext) = (text1, text2)
     else:
       (shorttext, longtext) = (text1, text2)
-
     i = longtext.find(shorttext)
     if i != -1:
-      if i == 0:
-        diffs = [(self.DIFF_EQUAL, shorttext), (self.DIFF_INSERT, longtext[i + len(shorttext):])]
-      elif i + len(shorttext) == len(longtext):
-        diffs = [(self.DIFF_INSERT, longtext[:i]), (self.DIFF_EQUAL, shorttext)]
       # Shorter text is inside the longer text (speedup).
-      else:
-        diffs = [(self.DIFF_INSERT, longtext[:i]), (self.DIFF_EQUAL, shorttext),
-                  (self.DIFF_INSERT, longtext[i + len(shorttext):])]
-
+      diffs = [(self.DIFF_INSERT, longtext[:i]), (self.DIFF_EQUAL, shorttext),
+               (self.DIFF_INSERT, longtext[i + len(shorttext):])]
       # Swap insertions for deletions if diff is reversed.
       if len(text1) > len(text2):
-        if i == 0:
-          diffs[1] = (self.DIFF_DELETE, diffs[1][1])
-        elif i + len(shorttext) == len(longtext):
-          diffs[0] = self.DIFF_DELETE, diffs[0][1]
-        else:
-          diffs[0] = (self.DIFF_DELETE, diffs[0][1])
-          diffs[2] = (self.DIFF_DELETE, diffs[2][1])
+        diffs[0] = (self.DIFF_DELETE, diffs[0][1])
+        diffs[2] = (self.DIFF_DELETE, diffs[2][1])
       return diffs
 
-    # do not found the same section
     if len(shorttext) == 1:
       # Single character string.
       # After the previous speedup, the character can't be an equality.
